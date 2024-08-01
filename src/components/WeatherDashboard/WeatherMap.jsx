@@ -90,7 +90,7 @@ const WeatherMap = ({
     const fetchCoordinates = async () => {
       try {
         const response = await axios.get(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${query.q}&limit=5&appid=${API_KEY}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${query.q}&limit=5&appid=${API_KEY}`
         );
         if (response.data.length > 0) {
           const { lat, lon } = response.data[0];
