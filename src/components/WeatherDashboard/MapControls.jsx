@@ -3,10 +3,12 @@ import Button from "./Button";
 import { TiWeatherShower, TiWeatherWindy } from "react-icons/ti";
 import { GiPressureCooker } from "react-icons/gi";
 import { CiTempHigh } from "react-icons/ci";
+import toast from "react-hot-toast";
 
 export default function MapControls({ setLayer }) {
   const handleClick = (type) => {
     setLayer(type);
+    toast.success(`Layer changed to ${type}`)
   };
 
   return (

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Weather-Planner app",
+  "name": "Discover the ultimate Weather Dashboard and Event Planner. Get real-time weather updates, forecast details, and plan your activities with precision. Perfect for farmers, event organizers, and anyone needing accurate weather insights. #WeatherDashboard #EventPlanner #FarmerTools #WeatherApp #Forecast #EventManagement #PlanningTools",
   "icons": [
     {
       "src": "favicon.ico",
