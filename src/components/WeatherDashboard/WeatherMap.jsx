@@ -29,8 +29,11 @@ const WeatherMap = ({ coordinates, setCoordinates, unit, weather, layer }) => {
   const handleCoordinates = () => {
     const lat = weather?.lat;
     const lon = weather?.lon;
-    setCoordinates({ lat, lon });
-  };
+    if (typeof lat === 'number' && typeof lon === 'number') {
+      setCoordinates({ lat, lon });
+    } else {
+      console.error('Invalid coordinates:', { lat, lon });
+    }  };
 
   useEffect(() => {
     handleCoordinates();
