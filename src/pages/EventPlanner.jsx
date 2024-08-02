@@ -31,8 +31,7 @@ export default function EventPlanner({ weather }) {
               >
                 
                 <img src={activity.icon} alt="" />
-                <span className="text-gray-800">{activity.text}</span>
-              </div>
+                <div dangerouslySetInnerHTML={{ __html: activity.text }} />              </div>
             ))}
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -9,9 +9,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { getRandomTask, warmWeatherTasks, mildWeatherTasks,coolWeatherTasks } from "./randomTask";
+import {
+  getRandomTask,
+  warmWeatherTasks,
+  mildWeatherTasks,
+  coolWeatherTasks,
+} from "./randomTask";
 
+const memoizedGetRandomTask = {};
 const getActivitySuggestions = (forecast) => {
+  if (!forecast) return [];
   const activities = [];
 
   forecast.forEach((hourly) => {
@@ -19,23 +26,36 @@ const getActivitySuggestions = (forecast) => {
     let task;
 
     if (temp > 20) {
-      task = getRandomTask(warmWeatherTasks);
+      if (!memoizedGetRandomTask.warm) {
+        memoizedGetRandomTask.warm = getRandomTask(warmWeatherTasks);
+      }
+      task = memoizedGetRandomTask.warm;
       activities.push({
-        text: `Perfect weather for ${task} at ${title}. Enjoy the sunshine!`,
+        text: `<span>${task} at <b>${title}</b>. Enjoy the sunshine!</span>`,
+        __html: activities.text,
         icon: icon,
         bgColor: "bg-green-100",
       });
     } else if (temp > 15) {
-      task = getRandomTask(mildWeatherTasks);
+      if (!memoizedGetRandomTask.mild) {
+        memoizedGetRandomTask.mild = getRandomTask(mildWeatherTasks);
+      }
+      task = memoizedGetRandomTask.mild;
       activities.push({
-        text: `Ideal conditions for ${task} at ${title}. Embrace the mild breeze!`,
+        text: `<span>${task} at <b>${title}</b>. Embrace the mild breeze!</span>`,
+        __html: activities.text,
+
         icon: icon,
         bgColor: "bg-blue-100",
       });
     } else {
-      task = getRandomTask(coolWeatherTasks);
+      if (!memoizedGetRandomTask.cool) {
+        memoizedGetRandomTask.cool = getRandomTask(coolWeatherTasks);
+      }
+      task = memoizedGetRandomTask.cool;
       activities.push({
-        text: ` ${task} at ${title}. Stay indoor Stay warm!`,
+        text: `<span>${task} at <b>${title}</b>. Stay indoor Stay warm!</span>`,
+        __html: activities.text,
         icon: icon,
         bgColor: "bg-violet-100",
       });
@@ -45,18 +65,19 @@ const getActivitySuggestions = (forecast) => {
   return activities;
 };
 
-
 export default function Chart({ weather, setActivities }) {
   const [hourlyData, setHourlyData] = useState([]);
+  const activities = useMemo(() => {
+    if (!weather || !weather.hourly) return [];
+    return getActivitySuggestions(weather.hourly);
+  }, [weather]);
 
   useEffect(() => {
-    if (weather) {
-      if (weather.hourly) {
-        setHourlyData(weather.hourly);
-        setActivities(getActivitySuggestions(weather.hourly));
-      }
+    if (weather && weather.hourly) {
+      setHourlyData(weather.hourly);
+      setActivities(activities);
     }
-  }, [weather]);
+  }, [weather, setActivities]);
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
