@@ -5,8 +5,24 @@ import WeatherDashboard from "./WeatherDashboard/WeatherDashboard";
 import UnitToggle from "./common/UnitToggle";
 import SearchBar from "./common/SearchBar";
 import DropDown from "./common/DropDown";
-import Hamburger from './common/Hamurger'
+import Hamburger from "./common/Hamurger";
 import Chart from "./eventcomponents/Chart";
-import AlertNotification from './common/AlertNotification'
+import AlertNotification from "./common/AlertNotification";
+import MapControls from "./WeatherDashboard/MapControls";
 
-export {Header, Footer, Location, WeatherDashboard, UnitToggle, SearchBar, DropDown, Hamburger, Chart, AlertNotification}
+import Tooltip from "./common/Tooltip";
+
+export {
+  Header,
+  Footer,
+  Location,
+  WeatherDashboard,
+  UnitToggle,
+  SearchBar,
+  DropDown,
+  Hamburger,
+  Chart,
+  AlertNotification,
+  Tooltip,
+  MapControls,
+};

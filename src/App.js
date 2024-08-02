@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { EventPlanner, WeatherHome } from "./pages";
-import { AlertNotification, Header } from "./components";
+import { AlertNotification, Button, Header, MapControls } from "./components";
 import { useEffect, useState } from "react";
 import WeatherMap from "./components/WeatherDashboard/WeatherMap";
 import { Toaster } from "react-hot-toast";
@@ -15,8 +15,11 @@ function App() {
   const [query, setQuery] = useState({ q: "" });
   const [alerts, setAlerts] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-  console.log(weather)
+  const [layer, setLayer] = useState("");
+
+  //custom hook to get Current location
   useCurrentLocation(setUserLocation, setQuery);
+  // Getting formatted data from wetherservices
   const getWeather = async () => {
     try {
       const data = await getFormattedData({ ...query, unit });
@@ -36,7 +39,9 @@ function App() {
 
   useEffect(() => {
     getWeather();
-  }, [query, unit, alerts]);
+  }, [query, unit]);
+
+  // get alert for the severe wether condition
 
   useEffect(() => {
     if (alerts.name || alerts.detail || alerts.temp) {
@@ -58,13 +63,18 @@ function App() {
         setUnit={setUnit}
         unit={unit}
       />
-      <WeatherMap
-        coordinates={userLocation}
-        setCoordinates={setUserLocation}
-        unit={unit}
-        query={query}
-        setQuery={setQuery}
-      />
+      <div className="relative">
+        <WeatherMap
+          weather={weather}
+          coordinates={userLocation}
+          setCoordinates={setUserLocation}
+          unit={unit}
+          layer={layer}
+        />
+        <div className="absolute top-4 right-4 z-[9999] space-y-3">
+          <MapControls setLayer={setLayer} />
+        </div>
+      </div>
       {showAlert && <AlertNotification alerts={alerts} />}
       <Routes>
         <Route
