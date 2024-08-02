@@ -9,32 +9,42 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { getRandomTask, warmWeatherTasks, mildWeatherTasks,coolWeatherTasks } from "./randomTask";
 
 const getActivitySuggestions = (forecast) => {
   const activities = [];
+
   forecast.forEach((hourly) => {
     const { title, temp, date, icon } = hourly;
-    if (temp > 20)
+    let task;
+
+    if (temp > 20) {
+      task = getRandomTask(warmWeatherTasks);
       activities.push({
-        text: ` Perfect weather for a scenic stroll at ${title}. Enjoy the sunshine!`,
+        text: `Perfect weather for ${task} at ${title}. Enjoy the sunshine!`,
         icon: icon,
         bgColor: "bg-green-100",
       });
-    else if (temp > 15)
+    } else if (temp > 15) {
+      task = getRandomTask(mildWeatherTasks);
       activities.push({
-        text: ` Ideal conditions for a refreshing jog at ${title}. Embrace the mild breeze!`,
+        text: `Ideal conditions for ${task} at ${title}. Embrace the mild breeze!`,
         icon: icon,
         bgColor: "bg-blue-100",
       });
-    else
+    } else {
+      task = getRandomTask(coolWeatherTasks);
       activities.push({
-        text: `☔ Cozy up indoors or plan a movie marathon at ${title}. Stay warm!`,
+        text: ` ${task} at ${title}. Stay indoor Stay warm!`,
         icon: icon,
         bgColor: "bg-violet-100",
       });
+    }
   });
+
   return activities;
 };
+
 
 export default function Chart({ weather, setActivities }) {
   const [hourlyData, setHourlyData] = useState([]);
@@ -45,7 +55,6 @@ export default function Chart({ weather, setActivities }) {
         setHourlyData(weather.hourly);
         setActivities(getActivitySuggestions(weather.hourly));
       }
-    
     }
   }, [weather]);
 
@@ -68,30 +77,32 @@ export default function Chart({ weather, setActivities }) {
   };
 
   return (
-    <div className="w-full">
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={hourlyData.map((hourly) => ({
-            time: hourly.title,
-            temperature: hourly.temp,
-            date: hourly.date,
-            icon: hourly.icon,
-          }))}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-          <XAxis dataKey="time" stroke="#8884d8" />
-          <YAxis stroke="#8884d8" />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend verticalAlign="top" height={36} />
-          <Line
-            type="monotone"
-            dataKey="temperature"
-            stroke="#8884d8"
-            strokeWidth={3}
-            dot={{ r: 6, fill: "#8884d8" }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <>
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={hourlyData.map((hourly) => ({
+              time: hourly.title,
+              temperature: hourly.temp,
+              date: hourly.date,
+              icon: hourly.icon,
+            }))}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+            <XAxis dataKey="time" stroke="#8884d8" />
+            <YAxis stroke="#8884d8" />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend verticalAlign="top" height={36} />
+            <Line
+              type="monotone"
+              dataKey="temperature"
+              stroke="#8884d8"
+              strokeWidth={3}
+              dot={{ r: 6, fill: "#8884d8" }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </>
   );
 }
