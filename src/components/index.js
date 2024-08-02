@@ -10,8 +10,6 @@ import Chart from "./eventcomponents/Chart";
 import AlertNotification from "./common/AlertNotification";
 import MapControls from "./WeatherDashboard/MapControls";
 
-import Tooltip from "./common/Tooltip";
-
 export {
   Header,
   Footer,
@@ -23,6 +21,5 @@ export {
   Hamburger,
   Chart,
   AlertNotification,
-  Tooltip,
   MapControls,
 };
