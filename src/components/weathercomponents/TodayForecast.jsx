@@ -7,7 +7,7 @@ export default function TodayForecast({ weather, unit }) {
       <div className="space-y-3">
         <h1 className="lg:text-2xl text-xl text-center">Today's Forecast</h1>
         <div className="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2">
-          {weather?.hourly?.map((item, index) => (
+          {weather?.hourly?.slice(0, 6).map((item, index) => (
             <div
               key={index}
               className={`flex flex-col justify-center items-center  space-y-4 ${

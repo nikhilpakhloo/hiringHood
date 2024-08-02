@@ -79,7 +79,7 @@ const formatForecastWeather = (secs, offset, data) => {
       date: f.dt_txt,
       rain: f.rain ? f.rain["1h"] : 0,
     }))
-    .slice(0, 6);
+    ;
 
   const daily = data
     .filter((f) => f.dt_txt.slice(-8) === "00:00:00")
