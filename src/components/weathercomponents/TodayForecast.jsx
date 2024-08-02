@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function TodayForecast({ weather }) {
+export default function TodayForecast({ weather, unit }) {
   
   return (
     <div className=" mt-4 w-full max-w-4xl md:p-6 p-2 bg-white shadow-lg rounded-2xl">
@@ -18,7 +18,7 @@ export default function TodayForecast({ weather }) {
 
               <img src={item.icon} alt="icon" />
 
-              <p>{Math.floor(item.temp) }</p>
+              <p>{Math.floor(item.temp)}°{unit === "metric" ? "C" : "F"}</p>
             </div>
           ))}
         </div>

@@ -23,7 +23,7 @@ const Location = ({ setCoordinates }) => {
   };
 
   return (
-    <div>
+    <div className="">
       <button
         onClick={handleGetCurrentLocation}
         className="w-8 h-8 flex justify-center p-1 items-center bg-white text-black rounded-md cursor-pointer shadow-lg"

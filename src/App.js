@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import WeatherMap from "./components/WeatherDashboard/WeatherMap";
 import { Toaster } from "react-hot-toast";
 import { getFormattedData } from "./services/WeatherServices";
+import useCurrentLocation from "./hooks/useCurrentLocation";
 
 function App() {
   const [weather, setWeather] = useState(null);
@@ -13,25 +14,7 @@ function App() {
   const [unit, setUnit] = useState("metric");
   const [query, setQuery] = useState({ q: "" });
 
- 
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lon: longitude });
-          setQuery({ lat: latitude, lon: longitude }); 
-        },
-        (error) => {
-          console.error("Error getting location: ", error);
-          
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    
-    }
-  };
+  useCurrentLocation(setUserLocation, setQuery);
 
   const getWeather = async () => {
     try {
@@ -43,18 +26,15 @@ function App() {
   };
 
   useEffect(() => {
-    if (userLocation.lat && userLocation.lon) {
-      setQuery({ lat: userLocation.lat, lon: userLocation.lon }); 
-    } else {
-      getCurrentLocation(); 
-    }
-  }, [userLocation]);
+    if (!userLocation.lat && !userLocation.lon) return;
+
+    setUserLocation({ lat: userLocation.lat, lon: userLocation.lon });
+    setQuery({ lat: userLocation.lat, lon: userLocation.lon });
+  }, [setUserLocation]);
 
   useEffect(() => {
-    getWeather(); 
+    getWeather();
   }, [query, unit]);
-
-
 
   return (
     <div>
@@ -69,10 +49,15 @@ function App() {
         setCoordinates={setUserLocation}
         unit={unit}
         query={query}
+        setQuery={setQuery}
       />
       <Routes>
-        <Route path="/" index element={<WeatherHome weather={weather} unit={unit} />} />
-        <Route path="/event-planner" element={<EventPlanner />} />
+        <Route
+          path="/"
+          index
+          element={<WeatherHome weather={weather} unit={unit} />}
+        />
+        <Route path="/event-planner" element={<EventPlanner  weather={weather} unit={unit}  />} />
         <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
       </Routes>
       <Toaster />
