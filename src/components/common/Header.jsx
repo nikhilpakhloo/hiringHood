@@ -39,13 +39,7 @@ const Header = ({ userLocation, setUserLocation, ...props }) => {
           >
             Event Planner
           </Link>
-          <Link
-            to="/farmer-dashboard"
-            className="block lg:inline-block hover:bg-blue-700 px-4 py-2 rounded-lg transition duration-300"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Farmer Planner
-          </Link>
+       
         </div>
 
         <div className="flex items-center space-x-4 flex-wrap ">

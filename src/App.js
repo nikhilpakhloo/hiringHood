@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { EventPlanner, FarmerDashboard, WeatherHome } from "./pages";
-import { Header } from "./components";
+import { EventPlanner, WeatherHome } from "./pages";
+import { AlertNotification, Header } from "./components";
 import { useEffect, useState } from "react";
 import WeatherMap from "./components/WeatherDashboard/WeatherMap";
 import { Toaster } from "react-hot-toast";
@@ -13,13 +13,15 @@ function App() {
   const [userLocation, setUserLocation] = useState({ lat: null, lon: null });
   const [unit, setUnit] = useState("metric");
   const [query, setQuery] = useState({ q: "" });
-
+  const [alerts, setAlerts] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
+  console.log(weather)
   useCurrentLocation(setUserLocation, setQuery);
-
   const getWeather = async () => {
     try {
       const data = await getFormattedData({ ...query, unit });
       setWeather(data);
+      setAlerts(data);
     } catch (error) {
       console.error("Error fetching weather data:", error.message);
     }
@@ -34,7 +36,19 @@ function App() {
 
   useEffect(() => {
     getWeather();
-  }, [query, unit]);
+  }, [query, unit, alerts]);
+
+  useEffect(() => {
+    if (alerts.name || alerts.detail || alerts.temp) {
+      setShowAlert(true);
+
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alerts.name, alerts.detail, alerts.temp]);
 
   return (
     <div>
@@ -51,14 +65,17 @@ function App() {
         query={query}
         setQuery={setQuery}
       />
+      {showAlert && <AlertNotification alerts={alerts} />}
       <Routes>
         <Route
           path="/"
           index
           element={<WeatherHome weather={weather} unit={unit} />}
         />
-        <Route path="/event-planner" element={<EventPlanner  weather={weather} unit={unit}  />} />
-        <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+        <Route
+          path="/event-planner"
+          element={<EventPlanner weather={weather} unit={unit} />}
+        />
       </Routes>
       <Toaster />
     </div>
